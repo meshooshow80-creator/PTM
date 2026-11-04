@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نظام محل PTM</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f8;--card:#fff;--tx:#14213d;--mut:#6b778c;--br:#dde4ef;--nav:#0b2a5b;--pri:#1d63e9;--ok:#16a34a;--bad:#dc2626;--warn:#f59e0b;--in:#f6f8fc;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1424;--card:#16203a;--tx:#e8eefc;--mut:#93a0bd;--br:#26335a;--nav:#07122b;--in:#101a31}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Cairo,Tahoma,sans-serif;font-size:15px}
+button,input,select{font:inherit;color:inherit}
+header{background:var(--nav);color:#fff;padding:10px 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+header b{font-size:18px;flex:1}
+nav{display:flex;gap:6px}
+nav button{background:transparent;border:0;color:#cfdcf5;padding:8px 12px;border-radius:8px;cursor:pointer}
+nav button.on{background:var(--pri);color:#fff}
+main{max-width:1200px;margin:auto;padding:12px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.stat{background:var(--card);border:1px solid var(--br);border-radius:12px;padding:12px}
+.stat small{color:var(--mut)}.stat div{font-size:22px;font-weight:700;margin-top:2px}
+.s1 div{color:var(--ok)}.s2 div{color:var(--pri)}.s4 div{color:var(--bad)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:820px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--br);border-radius:12px;padding:12px;margin-bottom:12px}
+h3{margin:0 0 10px;font-size:16px}
+.search{width:100%;padding:10px 12px;border:1px solid var(--br);border-radius:10px;background:var(--in);margin-bottom:10px}
+.prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px;max-height:340px;overflow:auto}
+.p{background:var(--in);border:1px solid var(--br);border-radius:10px;padding:8px 4px;text-align:center;cursor:pointer}
+.p:active{transform:scale(.97)}.p span{font-size:28px;display:block}.p small{display:block;color:var(--mut)}.p.out{opacity:.45}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse}th,td{padding:7px 6px;text-align:right;border-bottom:1px solid var(--br);white-space:nowrap}th{color:var(--mut);font-weight:600}
+td input{width:62px;padding:4px;border:1px solid var(--br);border-radius:6px;background:var(--in)}
+.x{background:none;border:0;color:var(--bad);cursor:pointer;font-size:16px}
+.row{display:flex;justify-content:space-between;padding:4px 0}
+.tot{background:var(--nav);color:#fff;border-radius:10px;padding:10px 12px;font-size:19px;font-weight:700;margin:8px 0}
+.btns{display:flex;gap:8px}
+.btn{flex:1;border:0;border-radius:10px;padding:11px;color:#fff;cursor:pointer;font-weight:600}
+.b-ok{background:var(--ok)}.b-bad{background:var(--bad)}.b-pri{background:var(--pri)}
+.alert{display:flex;gap:8px;padding:8px;border-radius:8px;background:var(--in);margin-bottom:6px}
+.chart{width:100%;height:auto}
+.form{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:10px}
+.form input,.form select{padding:9px;border:1px solid var(--br);border-radius:8px;background:var(--in)}
+.look{text-align:center}.look input{width:100%;font-size:26px;padding:14px;text-align:center;border:2px solid var(--pri);border-radius:12px;background:var(--in)}#big{min-height:150px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:4px}.bn{font-size:28px;font-weight:700}.bp{font-size:64px;font-weight:700;color:var(--pri);line-height:1.1}.bp small{font-size:22px;color:var(--mut)}.bm{color:var(--mut);font-size:18px}.bm.bad{color:var(--bad)}.bm.ok{color:var(--ok)}
+.hide{display:none}
+.lowt{color:var(--bad);font-weight:700}
+body.guest .adm{display:none!important}.hbtn{background:#ffffff22;border:0;color:#fff;border-radius:8px;padding:6px 10px;cursor:pointer}
+#login{position:fixed;inset:0;background:var(--nav);display:flex;align-items:center;justify-content:center;z-index:50;padding:16px}
+#login .bx{background:var(--card);border-radius:16px;padding:22px;width:100%;max-width:340px;text-align:center}
+#login input{width:100%;font-size:22px;text-align:center;padding:12px;border:2px solid var(--pri);border-radius:10px;background:var(--in);margin:10px 0}
+#login .btn{margin-top:8px;width:100%}
+#receipt{display:none;font-family:Cairo,Tahoma,sans-serif;color:#000;background:#fff;max-width:76mm;margin:auto;font-size:12px}
+#receipt h2{margin:0;text-align:center;font-size:18px}#receipt table{width:100%;margin:6px 0}#receipt td,#receipt th{padding:2px;border-bottom:1px dashed #000;font-size:12px;color:#000}
+@page{margin:4mm}
+@media print{body>*{display:none!important}body>#receipt{display:block!important}body{background:#fff!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script></head>
+<body>
+<header>
+<b>📱 PTM Mobile Accessories — ساملوط</b><span id="who"></span><button id="out" class="hbtn">خروج</button>
+<nav><button data-v="home" class="on">الرئيسية</button><button data-v="stock" class="adm">المنتجات والمخزون</button><button data-v="sales" class="adm">المبيعات</button></nav>
+</header>
+<main>
+<section id="v-home">
+<div class="stats adm">
+<div class="stat s1"><small>صافي ربح اليوم</small><div id="st-profit">0</div></div>
+<div class="stat s2"><small>مبيعات اليوم</small><div id="st-sales">0</div></div>
+<div class="stat"><small>عدد المنتجات</small><div id="st-count">0</div></div>
+<div class="stat s4"><small>مخزون منخفض</small><div id="st-low">0</div></div>
+</div>
+<div class="card look noprint"><h3>🔎 استعلام بالكود</h3><input id="code" inputmode="numeric" autocomplete="off" placeholder="اكتب الكود أو اسكن الباركود، ثم Enter للإضافة"><div id="big"></div></div>
+<div class="grid">
+<div>
+<div class="card inv">
+<h3>🧾 فاتورة بيع جديدة</h3>
+<input class="search" id="q" placeholder="ابحث عن منتج بالاسم…">
+<div class="prods" id="prods"></div>
+</div>
+<div class="card noprint adm"><h3>📈 مبيعات آخر 7 أيام</h3><svg id="chart" class="chart" viewBox="0 0 400 170"></svg></div>
+</div>
+<div>
+<div class="card inv">
+<div class="tw"><table><thead><tr><th>الصنف</th><th>الكمية</th><th>السعر</th><th>الإجمالي</th><th></th></tr></thead><tbody id="cart"></tbody></table></div>
+<div id="empty" style="color:var(--mut);padding:10px 0">اضغط على منتج لإضافته للفاتورة.</div>
+<div class="row"><span>المجموع الفرعي</span><b id="sub">0.00</b></div>
+<div class="row adm"><span>الخصم (ج.م)</span><input id="disc" type="number" min="0" value="0" style="width:90px;padding:4px;border:1px solid var(--br);border-radius:6px;background:var(--in)"></div>
+<div class="row"><span>الضريبة (14%)</span><b id="tax">0.00</b></div>
+<div class="tot row"><span>الإجمالي الكلي</span><span id="total">0.00 ج.م</span></div>
+<div class="btns noprint"><button class="btn b-ok" id="save">حفظ</button><button class="btn b-ok" id="savep">حفظ وطباعة</button><button class="btn b-pri" id="print">طباعة</button><button class="btn b-bad" id="cancel">إلغاء</button></div>
+</div>
+<div class="card noprint adm"><h3>👥 مبيعات اليوم لكل موظف</h3><div id="byemp"></div></div>
+<div class="card noprint adm"><h3>🔔 تنبيهات مهمة</h3><div id="alerts"></div></div>
+</div>
+</div>
+</section>
+
+<section id="v-stock" class="hide adm">
+<div class="card">
+<h3>إضافة منتج</h3>
+<div class="form">
+<input id="n-code" placeholder="الكود"><input id="n-name" placeholder="اسم المنتج"><input id="n-emoji" placeholder="رمز 🎧" maxlength="2">
+<input id="n-cost" type="number" placeholder="سعر الشراء"><input id="n-price" type="number" placeholder="سعر البيع">
+<input id="n-stock" type="number" placeholder="الكمية"><input id="n-min" type="number" placeholder="حد التنبيه">
+<button class="btn b-ok" id="n-add">إضافة</button>
+</div>
+<div class="tw"><table><thead><tr><th>الكود</th><th>المنتج</th><th>شراء</th><th>بيع</th><th>الكمية</th><th>الحد</th><th></th></tr></thead><tbody id="stockT"></tbody></table></div>
+</div>
+</section>
+
+<section id="v-sales" class="hide adm">
+<div class="card">
+<h3>سجل الفواتير</h3>
+<div class="tw"><table><thead><tr><th>رقم</th><th>التاريخ</th><th>الأصناف</th><th>الموظف</th><th>الإجمالي</th><th>الربح</th></tr></thead><tbody id="salesT"></tbody></table></div>
+
+</div>
+</section>
+</main>
+<div id="receipt"></div>
+<div id="login"></div>
+<script>
+const $=id=>document.getElementById(id),TAX=.14,OWNER='meshooshow80@gmail.com';
+const f=n=>Number(n||0).toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2});
+const day=d=>{d=new Date(d);return d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()};
+firebase.initializeApp({apiKey:"AIzaSyCUa26_0D4Kg-gCqg1WkG9tDZJFCrXqUh8",authDomain:"ptm-6ca1e.firebaseapp.com",projectId:"ptm-6ca1e",storageBucket:"ptm-6ca1e.firebasestorage.app",messagingSenderId:"384999727565",appId:"1:384999727565:web:d18e8b60ee181979342484"});
+const auth=firebase.auth(),db=firebase.firestore();
+let S={products:[],sales:[]},cart=[],role=null,user=null,unsub=[];
+function render(){
+ const q=$('q').value.trim();
+ $('prods').innerHTML=S.products.filter(p=>p.name.includes(q)).map(p=>`<div class="p ${p.stock<=0?'out':''}" onclick="add('${p.id}')"><span>${p.emoji||'📦'}</span>${p.name}<small>${p.price} ج.م<span class="adm"> · ${p.stock}</span></small></div>`).join('')||'<div style="color:var(--mut)">لا توجد منتجات.</div>';
+ $('cart').innerHTML=cart.map((c,i)=>`<tr><td>${c.name}</td><td><input type="number" min="1" value="${c.qty}" onchange="setQ(${i},this.value)"></td><td>${f(c.price)}</td><td>${f(c.price*c.qty)}</td><td><button class="x" onclick="del(${i})">🗑</button></td></tr>`).join('');
+ $('empty').style.display=cart.length?'none':'block';
+ const sub=cart.reduce((a,c)=>a+c.price*c.qty,0),d=Math.min(+$('disc').value||0,sub),tax=(sub-d)*TAX;
+ $('sub').textContent=f(sub);$('tax').textContent=f(tax);$('total').textContent=f(sub-d+tax)+' ج.م';
+ const ts=S.sales.filter(s=>day(s.date)===day(new Date()));
+ $('st-sales').textContent=f(ts.reduce((a,s)=>a+s.total,0))+' ج.م';
+ $('st-profit').textContent=f(ts.reduce((a,s)=>a+s.profit,0))+' ج.م';
+ $('st-count').textContent=S.products.length+' صنف';
+ const low=S.products.filter(p=>p.stock<=p.min);
+ $('st-low').textContent=low.length+' صنف';
+ $('alerts').innerHTML=low.map(p=>`<div class="alert">${p.stock<=0?'🔴':'⚠️'}<div><b>${p.name}</b><br><small>${p.stock<=0?'نفد المخزون':'مخزون منخفض'} — الكمية: ${p.stock}</small></div></div>`).join('')||'<div style="color:var(--mut)">المخزون كله تمام.</div>';
+ const m={};ts.forEach(s=>{m[s.by]=(m[s.by]||0)+s.total});
+ $('byemp').innerHTML=Object.entries(m).map(([k,v])=>`<div class="row"><span>${k}</span><b>${f(v)} ج.م</b></div>`).join('')||'<div style="color:var(--mut)">لا مبيعات اليوم.</div>';
+ chart();stock();sales();
+}
+function chart(){
+ const days=[],names=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+ for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push({k:day(d),n:names[d.getDay()],v:0})}
+ S.sales.forEach(s=>{const x=days.find(d=>d.k===day(s.date));if(x)x.v+=s.total});
+ const mx=Math.max(1000,...days.map(d=>d.v)),h=120;
+ $('chart').innerHTML=days.map((d,i)=>{const bh=d.v/mx*h,x=i*57+10;return `<rect x="${x}" y="${140-bh}" width="44" height="${bh}" rx="5" fill="#1d63e9"/><text x="${x+22}" y="${134-bh}" font-size="10" text-anchor="middle" fill="currentColor">${d.v?Math.round(d.v/100)/10+'k':''}</text><text x="${x+22}" y="158" font-size="10" text-anchor="middle" fill="currentColor">${d.n}</text>`}).join('');
+}
+function stock(){
+ $('stockT').innerHTML=S.products.map(p=>`<tr><td><input value="${p.code||''}" onchange="upd('${p.id}','code',this.value)" style="width:120px"></td><td>${p.emoji||''} ${p.name}</td><td>${f(p.cost)}</td><td><input type="number" value="${p.price}" onchange="upd('${p.id}','price',this.value)"></td><td><input type="number" value="${p.stock}" onchange="upd('${p.id}','stock',this.value)" class="${p.stock<=p.min?'lowt':''}"></td><td><input type="number" value="${p.min}" onchange="upd('${p.id}','min',this.value)"></td><td><button class="x" onclick="rm('${p.id}')">🗑</button></td></tr>`).join('');
+}
+function sales(){
+ $('salesT').innerHTML=S.sales.slice(0,50).map(s=>`<tr><td>${s.no}</td><td>${new Date(s.date).toLocaleString('ar-EG',{dateStyle:'short',timeStyle:'short'})}</td><td>${s.items}</td><td>${s.by||''}</td><td>${f(s.total)}</td><td>${f(s.profit)}</td></tr>`).join('');
+}
+function add(id){const p=S.products.find(x=>x.id===id);if(!p||p.stock<=0)return;const c=cart.find(x=>x.id===id);if(c){if(c.qty<p.stock)c.qty++}else cart.push({id,name:p.name,price:p.price,cost:p.cost||0,qty:1});render()}
+function setQ(i,v){const p=S.products.find(x=>x.id===cart[i].id);cart[i].qty=Math.max(1,Math.min(+v||1,p.stock));render()}
+function del(i){cart.splice(i,1);render()}
+const err=e=>alert('تعذر التنفيذ: '+e.message);
+function upd(id,k,v){db.collection('products').doc(id).update({[k]:k==='code'?v.trim():(+v||0)}).catch(err)}
+function rm(id){if(confirm('حذف المنتج؟'))db.collection('products').doc(id).delete().catch(err)}
+$('q').oninput=render;$('disc').oninput=render;
+$('cancel').onclick=()=>{cart=[];$('disc').value=0;render()};
+$('print').onclick=()=>{const sub=cart.reduce((a,c)=>a+c.price*c.qty,0),d=role==='admin'?Math.min(+$('disc').value||0,sub):0;doPrint(null,cart,{sub,d,tax:(sub-d)*TAX,total:(sub-d)*(1+TAX)})};
+function doPrint(no,items,t){
+ if(!items.length){alert('الفاتورة فاضية. أضف منتجات أولاً.');return}
+ $('receipt').innerHTML=`<h2>PTM</h2><div style="text-align:center">موبايل: <span dir="ltr">٠١٥٥٥٤٢١٨٥٦</span></div><div style="margin-top:6px">${no?'فاتورة رقم: '+no:'<b>عرض سعر (غير مسجل)</b>'}<br>التاريخ: ${new Date().toLocaleString('ar-EG')}</div><table><tr><th>الصنف</th><th>كمية</th><th>سعر</th><th>إجمالي</th></tr>${items.map(c=>`<tr><td>${c.name}</td><td>${c.qty}</td><td>${f(c.price)}</td><td>${f(c.price*c.qty)}</td></tr>`).join('')}</table><div>المجموع الفرعي: ${f(t.sub)}</div>${t.d?`<div>الخصم: ${f(t.d)}</div>`:''}<div>الضريبة (14%): ${f(t.tax)}</div><h3 style="margin:6px 0">الإجمالي: ${f(t.total)} ج.م</h3><div style="text-align:center">شكراً لتعاملكم مع PTM</div>`;
+ window.print();
+}
+async function saveInv(pr){
+ if(!cart.length){alert('الفاتورة فاضية. أضف منتجات أولاً.');return}
+ const sub=cart.reduce((a,c)=>a+c.price*c.qty,0),d=role==='admin'?Math.min(+$('disc').value||0,sub):0,tax=(sub-d)*TAX,total=sub-d+tax,cost=cart.reduce((a,c)=>a+c.cost*c.qty,0);
+ const n=new Date(),z=x=>String(x).padStart(2,'0'),no=String(n.getFullYear()).slice(2)+z(n.getMonth()+1)+z(n.getDate())+'-'+z(n.getHours())+z(n.getMinutes())+z(n.getSeconds());
+ const items=cart.slice(),b=db.batch();
+ b.set(db.collection('sales').doc(),{no,date:n.toISOString(),items:items.map(c=>c.name+' ×'+c.qty).join('، '),total,profit:total-tax-cost,by:user.email});
+ items.forEach(c=>b.update(db.collection('products').doc(c.id),{stock:firebase.firestore.FieldValue.increment(-c.qty)}));
+ try{await b.commit()}catch(e){alert('تعذر حفظ الفاتورة: '+e.message);return}
+ cart=[];$('disc').value=0;render();
+ if(pr)doPrint(no,items,{sub,d,tax,total});else alert('تم حفظ الفاتورة.');
+}
+$('save').onclick=()=>saveInv(false);$('savep').onclick=()=>saveInv(true);
+$('n-add').onclick=()=>{
+ const name=$('n-name').value.trim();if(!name||!+$('n-price').value){alert('اكتب اسم المنتج وسعر البيع.');return}
+ db.collection('products').add({code:$('n-code').value.trim(),name,emoji:$('n-emoji').value||'📦',cost:+$('n-cost').value||0,price:+$('n-price').value,stock:+$('n-stock').value||0,min:+$('n-min').value||3}).then(()=>['n-code','n-name','n-emoji','n-cost','n-price','n-stock','n-min'].forEach(i=>$(i).value='')).catch(err);
+};
+function find(c){c=c.trim();return c&&S.products.find(p=>String(p.code||'').trim()===c)}
+function show(){const c=$('code').value.trim(),p=find(c),b=$('big');
+ if(!c)b.innerHTML='<span class="bm">اكتب الكود أو اسكن الباركود</span>';
+ else if(!p)b.innerHTML='<span class="bm bad">الكود غير موجود</span>';
+ else b.innerHTML=`<div class="bn">${p.emoji||''} ${p.name}</div><div class="bp">${f(p.price)} <small>ج.م</small></div>${p.stock<=0?'<div class="bm bad">نفد المخزون</div>':'<div class="bm adm">المتاح: '+p.stock+'</div>'}`}
+$('code').oninput=show;
+$('code').onkeydown=e=>{if(e.key!=='Enter')return;const p=find($('code').value);if(!p||p.stock<=0)return;add(p.id);$('code').value='';$('big').innerHTML='<span class="bm ok">تمت الإضافة للفاتورة ✔</span>';setTimeout(show,900)};
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
+ document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x===b));
+ ['home','stock','sales'].forEach(v=>$('v-'+v).classList.toggle('hide',v!==b.dataset.v));
+});
+function loginUI(){
+ $('login').style.display='flex';
+ $('login').innerHTML=`<div class="bx"><h3>📱 نظام محل PTM</h3><input id="em" type="email" dir="ltr" placeholder="الإيميل"><input id="pw" type="password" dir="ltr" placeholder="الباسورد"><div id="err" style="color:var(--bad);min-height:22px"></div><button class="btn b-pri" id="go">دخول</button></div>`;
+ const go=()=>auth.signInWithEmailAndPassword($('em').value.trim(),$('pw').value).catch(()=>{$('err').textContent='الإيميل أو الباسورد غلط.'});
+ $('go').onclick=go;$('pw').onkeydown=e=>{if(e.key==='Enter')go()};$('em').focus();
+}
+$('out').onclick=()=>{cart=[];$('disc').value=0;auth.signOut()};
+auth.onAuthStateChanged(u=>{
+ unsub.forEach(x=>x());unsub=[];S={products:[],sales:[]};user=u;
+ if(!u){role=null;loginUI();return}
+ role=(u.email||'').toLowerCase()===OWNER?'admin':'staff';
+ document.body.classList.toggle('guest',role!=='admin');$('login').style.display='none';
+ ['home','stock','sales'].forEach(v=>$('v-'+v).classList.toggle('hide',v!=='home'));
+ document.querySelectorAll('nav button').forEach(x=>x.classList.toggle('on',x.dataset.v==='home'));
+ $('who').textContent=role==='admin'?'👤 المدير':'👤 '+u.email;
+ unsub.push(db.collection('products').orderBy('name').onSnapshot(s=>{S.products=s.docs.map(d=>({id:d.id,...d.data()}));render()},err));
+ if(role==='admin')unsub.push(db.collection('sales').orderBy('date','desc').limit(500).onSnapshot(s=>{S.sales=s.docs.map(d=>d.data());render()},err));
+ render();show();
+});
+</script>
+</body>
+</html>
